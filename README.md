@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/TOSHIBA-SCAN_MANAGER-0066CC?style=for-the-badge&logo=qt&logoColor=white&labelColor=003366" alt="Toshiba Scan Manager">
+<img src="https://img.shields.io/badge/TOSHIBA-SCAN_MANAGER-0066CC?style=for-the-badge&labelColor=003366" alt="Toshiba Scan Manager">
 
 </div>
 
@@ -31,7 +31,7 @@ Développé par **OMB Informatique**
 
 ## Fonctionnalites
 
-### :desktop_scanner: Gestionnaire de Templates Scan
+### :printer: Gestionnaire de Templates Scan
 - Import, creation, edition, duplication et suppression de profils de scan
 - Configuration complete : format (PDF, JPEG, TIFF, DOCX, XLSX), mode couleur, recto/verso, resolution (200/300/600 DPI)
 - Edition en masse des chemins SMB par groupe
