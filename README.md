@@ -16,6 +16,7 @@ Développé par **OMB Informatique**
 [![GitHub forks](https://img.shields.io/github/forks/reflexnpt/toshiba-scan-manager?style=for-the-badge)](https://github.com/reflexnpt/toshiba-scan-manager/network)
 [![GitHub stars](https://img.shields.io/github/stars/reflexnpt/toshiba-scan-manager?style=for-the-badge)](https://github.com/reflexnpt/toshiba-scan-manager/stargazers)
 [![GitHub license](https://img.shields.io/github/license/reflexnpt/toshiba-scan-manager?style=for-the-badge)](https://github.com/reflexnpt/toshiba-scan-manager/blob/main/LICENSE)
+[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-scan.reflexhome.ovh-00e5a0?style=for-the-badge&logo=googlechrome&logoColor=white)](https://scan.reflexhome.ovh)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
