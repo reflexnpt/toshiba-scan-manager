@@ -1,33 +1,10 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/Toshiba-Scan-Manager-0066CC?style=for-the-badge&logo=qt&logoColor=white&labelColor=003366" alt="Toshiba Scan Manager">
+<img src="https://img.shields.io/badge/TOSHIBA-SCAN_MANAGER-0066CC?style=for-the-badge&logo=qt&logoColor=white&labelColor=003366" alt="Toshiba Scan Manager">
 
 </div>
 
 <div align="center">
-
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" width="180" height="144">
-  <!-- Base/stand -->
-  <rect x="30" y="120" width="140" height="18" rx="4" fill="#1a1a2e" stroke="#0066CC" stroke-width="2"/>
-  <!-- Paper tray -->
-  <rect x="40" y="105" width="120" height="18" rx="3" fill="#16213e" stroke="#0066CC" stroke-width="1.5"/>
-  <!-- Paper in tray -->
-  <rect x="50" y="108" width="100" height="12" rx="2" fill="#e8f4f8" opacity="0.9"/>
-  <!-- Scanner body -->
-  <rect x="35" y="70" width="130" height="38" rx="5" fill="#1a1a2e" stroke="#0066CC" stroke-width="2"/>
-  <!-- Scanner glass -->
-  <rect x="45" y="77" width="110" height="24" rx="2" fill="#0a1628" stroke="#00d4ff" stroke-width="1.5"/>
-  <!-- Scan line (animated feel) -->
-  <line x1="48" y1="89" x2="152" y2="89" stroke="#00e5a0" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>
-  <!-- Control panel -->
-  <rect x="55" y="73" width="20" height="4" rx="1" fill="#00e5a0" opacity="0.7"/>
-  <circle cx="140" cy="75" r="3" fill="#00e5a0"/>
-  <circle cx="130" cy="75" r="3" fill="#ff6b6b"/>
-  <!-- Lid -->
-  <rect x="38" y="60" width="124" height="14" rx="4" fill="#0f3460" stroke="#0066CC" stroke-width="1.5"/>
-  <!-- Toshiba text -->
-  <text x="100" y="50" text-anchor="middle" fill="#00d4ff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">TOSHIBA</text>
-</svg>
 
 # Toshiba Scan Manager
 
@@ -53,7 +30,7 @@ Développé par **OMB Informatique**
 
 ## Fonctionnalites
 
-### :printer: Gestionnaire de Templates Scan
+### :desktop_scanner: Gestionnaire de Templates Scan
 - Import, creation, edition, duplication et suppression de profils de scan
 - Configuration complete : format (PDF, JPEG, TIFF, DOCX, XLSX), mode couleur, recto/verso, resolution (200/300/600 DPI)
 - Edition en masse des chemins SMB par groupe
