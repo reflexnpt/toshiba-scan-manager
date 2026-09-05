@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  toshiba-scan-manager:
+    build: .
+    container_name: toshiba-scan-manager
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
