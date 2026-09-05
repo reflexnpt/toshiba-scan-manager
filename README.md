@@ -26,7 +26,7 @@ Développé par **OMB Informatique**
 
 ## Fonctionnalites
 
-### :scanner: Gestionnaire de Templates Scan
+### :printer: Gestionnaire de Templates Scan
 - Import, creation, edition, duplication et suppression de profils de scan
 - Configuration complete : format (PDF, JPEG, TIFF, DOCX, XLSX), mode couleur, recto/verso, resolution (200/300/600 DPI)
 - Edition en masse des chemins SMB par groupe
