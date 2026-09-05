@@ -2,10 +2,14 @@ version: "3.8"
 
 services:
   toshiba-scan-manager:
-    build: .
+    build:
+      context: https://github.com/reflexnpt/toshiba-scan-manager.git#main
     container_name: toshiba-scan-manager
     ports:
       - "5000:5000"
     volumes:
-      - ./uploads:/app/uploads
+      - uploads:/app/uploads
     restart: unless-stopped
+
+volumes:
+  uploads:
