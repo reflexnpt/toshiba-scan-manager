@@ -154,7 +154,9 @@ def addressbook_generate():
     try:
         mapping = data.get('mapping') or {}
         order = data.get('order', 'auto')
-        csv_content, stats = addressbook.generate_csv(path, mapping, order)
+        excluded_rows = data.get('excludedRows', [])
+        strip_accents_flag = data.get('stripAccents', True)
+        csv_content, stats = addressbook.generate_csv(path, mapping, order, excluded_rows, strip_accents_flag)
         fname = 'ADDR_' + datetime.now().strftime('%d%m%y') + '.csv'
         return jsonify({'success': True, 'csv': csv_content, 'stats': stats, 'filename': fname}), 200
     except Exception as e:
