@@ -126,7 +126,7 @@
         s.addEventListener('change', renderPreview)
     );
 
-    // ---------- Aperçu ----------
+    // ---------- Apercu ----------
     function splitName(raw, order) {
         raw = (raw || '').trim();
         if (!raw) return ['', ''];
@@ -149,7 +149,7 @@
         const order = selOrder.value;
         const combined = chkCombined.checked;
         const get = (row, idx) => (idx !== null && idx !== undefined && row[idx] !== undefined) ? String(row[idx]) : '';
-        const preview = (state.sample || []).map(row => {
+        const preview = (state.sample || []).map((row, rowIdx) => {
             let first = '', last = '';
             if (combined) {
                 const s = splitName(get(row, selLast.value), order);
@@ -163,23 +163,76 @@
                 email: get(row, selEmail.value),
                 company: get(row, selCompany.value),
                 phone: get(row, selPhone.value),
+                _rowIdx: rowIdx,
             };
         });
 
+        const issues = state.issues_detail || [];
+        const issueMap = {};
+        issues.forEach(function(iss) { issueMap[iss.row] = iss; });
+
+        const detected = state.detected || {};
         const tbody = document.getElementById('abPreviewBody');
-        tbody.innerHTML = preview.map(p => {
+        tbody.innerHTML = preview.map(function(p) {
             const empty = p.first === '' && p.last === '' && p.email === '';
-            return '<tr' + (empty ? ' class="ab-row-empty"' : '') + '>' +
-                '<td>' + escapeHtml(p.first) + '</td>' +
-                '<td>' + escapeHtml(p.last) + '</td>' +
-                '<td>' + escapeHtml(p.email) + '</td>' +
-                '<td>' + escapeHtml(p.company) + '</td>' +
-                '<td>' + escapeHtml(p.phone) + '</td>' +
+            const iss = issueMap[p._rowIdx];
+            let classes = [];
+            if (empty) classes.push('ab-row-empty');
+            if (iss && iss.is_duplicate) classes.push('ab-row-duplicate');
+            if (iss && iss.char_issues && iss.char_issues.length > 0) classes.push('ab-row-chars');
+            if (iss && iss.email_issue === 'invalide') classes.push('ab-row-bad-email');
+
+            function highlightChars(text, colIdx) {
+                if (!iss || !iss.char_issues) return escapeHtml(text);
+                const colIssue = iss.char_issues.find(function(c) { return c.col === colIdx; });
+                if (!colIssue) return escapeHtml(text);
+                let result = '';
+                let lastIdx = 0;
+                colIssue.issues.forEach(function(ch) {
+                    const charIdx = text.indexOf(ch.char, lastIdx);
+                    if (charIdx !== -1) {
+                        result += escapeHtml(text.substring(lastIdx, charIdx));
+                        result += '<span class="ab-char-warn" title="Incompatible: ' + ch.code + ' \u2192 ' + (ch.replace || 'ASCII') + '">' + escapeHtml(ch.char) + '</span>';
+                        lastIdx = charIdx + 1;
+                    }
+                });
+                result += escapeHtml(text.substring(lastIdx));
+                return result;
+            }
+
+            const firstCol = combined ? detected.combined : detected.first;
+            const lastCol = combined ? detected.combined : detected.last;
+
+            return '<tr class="' + classes.join(' ') + '">' +
+                '<td>' + highlightChars(p.first, firstCol) + '</td>' +
+                '<td>' + highlightChars(p.last, lastCol) + '</td>' +
+                '<td>' + escapeHtml(p.email) + (iss && iss.email_issue === 'invalide' ? ' <span class="ab-email-badge">invalide</span>' : '') + (iss && iss.is_duplicate ? ' <span class="ab-dup-badge">doublon</span>' : '') + '</td>' +
+                '<td>' + highlightChars(p.company, detected.company) + '</td>' +
+                '<td>' + highlightChars(p.phone, detected.phone) + '</td>' +
                 '</tr>';
         }).join('');
 
         const n = state.totalRows || 0;
-        document.getElementById('abCount').textContent = n + ' contact' + (n > 1 ? 's' : '') + ' (aperçu des 8 premiers)';
+        document.getElementById('abCount').textContent = n + ' contact' + (n > 1 ? 's' : '') + ' (apercu des 8 premiers)';
+
+        renderIssuesBanner();
+    }
+
+    function renderIssuesBanner() {
+        const banner = document.getElementById('abIssuesBanner');
+        if (!banner || !state || !state.issues) return;
+        const iss = state.issues;
+        const parts = [];
+        if (iss.doublons > 0) parts.push('<span class="ab-issue-dup">' + iss.doublons + ' doublon' + (iss.doublons > 1 ? 's' : '') + '</span>');
+        if (iss.emails_invalides > 0) parts.push('<span class="ab-issue-email">' + iss.emails_invalides + ' e-mail invalide' + (iss.emails_invalides > 1 ? 's' : '') + '</span>');
+        if (iss.chars_speciaux > 0) parts.push('<span class="ab-issue-chars">' + iss.chars_speciaux + ' caractere' + (iss.chars_speciaux > 1 ? 's' : '') + ' special' + (iss.chars_speciaux > 1 ? 'x' : '') + '</span>');
+
+        if (parts.length === 0) {
+            banner.hidden = true;
+            return;
+        }
+        banner.innerHTML = '<span class="ab-issue-icon">\u26a0\ufe0f</span> Avertissements : ' + parts.join(' \u00b7 ') + '<span class="ab-issue-hint"> \u2014 Ces donnees seront ignorees lors de la generation.</span>';
+        banner.hidden = false;
     }
 
     function escapeHtml(s) {

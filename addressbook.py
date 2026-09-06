@@ -8,6 +8,19 @@ import openpyxl
 
 EMAIL_RE = re.compile(r'^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$')
 
+TOSHIBA_SAFE_RE = re.compile(r'^[a-zA-Z0-9\s\.\,\-\_\@\:\/\(\)\+]+$')
+
+SPECIAL_CHARS_MAP = {
+    'e': ['\u00e9', '\u00e8', '\u00ea', '\u00eb'],
+    'a': ['\u00e0', '\u00e2', '\u00e4'],
+    'u': ['\u00f9', '\u00fb', '\u00fc'],
+    'i': ['\u00ec', '\u00ee', '\u00ef'],
+    'o': ['\u00f2', '\u00f4', '\u00f6'],
+    'c': ['\u00e7'],
+    'y': ['\u00ff'],
+    'n': ['\u00f1'],
+}
+
 ADDR_HEADERS = [
     'First Name', 'Last Name', 'Email Address', 'Tel Number', '2nd Fax Number',
     'IPFax Destination', 'Facsimile Mode', 'Company', 'Department', 'Keyword',
@@ -125,6 +138,54 @@ def _email_score(rows, col_idx):
     return n
 
 
+def _find_special_chars(text):
+    issues = []
+    for char in text:
+        if ord(char) > 127:
+            for base, variants in SPECIAL_CHARS_MAP.items():
+                if char in variants:
+                    issues.append({'char': char, 'code': f'U+{ord(char):04X}', 'replace': base})
+                    break
+            else:
+                issues.append({'char': char, 'code': f'U+{ord(char):04X}', 'replace': ''})
+    return issues
+
+
+def detect_issues(data, email_col, name_col=None, company_col=None, phone_col=None):
+    seen_emails = {}
+    issues_by_row = []
+    stats = {'doublons': 0, 'chars_speciaux': 0, 'emails_invalides': 0, 'lignes_total': len(data)}
+
+    for row_idx, row in enumerate(data):
+        row_issues = {'row': row_idx, 'email_issue': None, 'char_issues': [], 'is_duplicate': False}
+
+        if email_col is not None and email_col < len(row):
+            email = row[email_col].strip().lower()
+            if email:
+                if not EMAIL_RE.match(email):
+                    row_issues['email_issue'] = 'invalide'
+                    stats['emails_invalides'] += 1
+                elif email in seen_emails:
+                    row_issues['is_duplicate'] = True
+                    row_issues['email_issue'] = 'doublon'
+                    stats['doublons'] += 1
+                else:
+                    seen_emails[email] = row_idx
+
+        for col_idx in [name_col, company_col, phone_col]:
+            if col_idx is not None and col_idx < len(row):
+                cell_text = row[col_idx]
+                char_issues = _find_special_chars(cell_text)
+                if char_issues:
+                    row_issues['char_issues'].append({'col': col_idx, 'issues': char_issues})
+                    stats['chars_speciaux'] += len(char_issues)
+
+        if row_issues['email_issue'] or row_issues['is_duplicate'] or row_issues['char_issues']:
+            issues_by_row.append(row_issues)
+
+    return {'stats': stats, 'issues': issues_by_row}
+
+
 def parse_workbook(path):
     rows = read_rows(path)
     header_idx = _find_header_row(rows)
@@ -186,12 +247,21 @@ def parse_workbook(path):
 
     headers_display = [('Colonne ' + str(i + 1)) if c == '' else c for i, c in enumerate(headers)]
 
+    email_col = detected.get('email')
+    name_col = detected.get('combined') or detected.get('last')
+    company_col = detected.get('company')
+    phone_col = detected.get('phone')
+
+    issues_result = detect_issues(data, email_col, name_col, company_col, phone_col)
+
     return {
         'headers': headers_display,
         'sample': data[:8],
         'totalRows': len(data),
         'detected': detected,
         'nCols': n_cols,
+        'issues': issues_result['stats'],
+        'issues_detail': issues_result['issues'][:50],
     }
 
 

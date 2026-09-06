@@ -1638,6 +1638,113 @@ table.ab-preview {
     font-style: italic;
 }
 
+.ab-issues-banner {
+    margin: 12px 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    color: #92400e;
+    font-size: .88rem;
+    line-height: 1.5;
+}
+
+[data-theme="dark"] .ab-issues-banner {
+    background: #451a03;
+    border-color: #d97706;
+    color: #fcd34d;
+}
+
+.ab-issue-icon {
+    margin-right: 6px;
+}
+
+.ab-issue-dup {
+    font-weight: 600;
+    color: #dc2626;
+}
+
+.ab-issue-email {
+    font-weight: 600;
+    color: #ea580c;
+}
+
+.ab-issue-chars {
+    font-weight: 600;
+    color: #7c3aed;
+}
+
+.ab-issue-hint {
+    color: var(--muted);
+    font-size: .82rem;
+}
+
+.ab-row-duplicate td {
+    background: #fef2f2;
+}
+
+[data-theme="dark"] .ab-row-duplicate td {
+    background: #450a0a;
+}
+
+.ab-row-bad-email td {
+    background: #fff7ed;
+}
+
+[data-theme="dark"] .ab-row-bad-email td {
+    background: #431407;
+}
+
+.ab-row-chars td {
+    background: #faf5ff;
+}
+
+[data-theme="dark"] .ab-row-chars td {
+    background: #2e1065;
+}
+
+.ab-char-warn {
+    background: #fef08a;
+    border-radius: 2px;
+    padding: 0 2px;
+    cursor: help;
+    border-bottom: 2px wavy #dc2626;
+}
+
+[data-theme="dark"] .ab-char-warn {
+    background: #854d0e;
+    color: #fef08a;
+}
+
+.ab-email-badge, .ab-dup-badge {
+    display: inline-block;
+    font-size: .7rem;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.ab-email-badge {
+    background: #fed7aa;
+    color: #9a3412;
+}
+
+.ab-dup-badge {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+[data-theme="dark"] .ab-email-badge {
+    background: #7c2d12;
+    color: #fed7aa;
+}
+
+[data-theme="dark"] .ab-dup-badge {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
 .ab-result {
     margin-top: 20px;
     padding: 14px 18px;
