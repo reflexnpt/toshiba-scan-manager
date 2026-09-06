@@ -41,7 +41,11 @@ Développé par **OMB Informatique**
 - Conversion Excel/CSV vers format CSV TopAddress Toshiba
 - Detection automatique des colonnes (email, nom, prenom, entreprise, telephone)
 - Support des colonnes combinees (ex: "DUPONT Jean")
-- Dedoublonnage et validation des emails
+- Detection des doublons (par email et par nom)
+- Detection des caracteres speciaux et accents avec surlignage colore
+- Selection manuelle des lignes a exclure avant export
+- Option de remplacement des accents (active par defaut, configurable)
+- Nettoyage automatique a l'export : accents→ASCII et suppression des car. speciaux
 
 ### :incoming_envelope: Testeur SMTP
 - Test de connectivite SMTP pour le scan email
