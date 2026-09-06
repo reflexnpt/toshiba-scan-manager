@@ -10,6 +10,9 @@ EMAIL_RE = re.compile(r'^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$')
 
 TOSHIBA_SAFE_RE = re.compile(r'^[a-zA-Z0-9\s\.\,\-\_\@\:\/\(\)\+]+$')
 
+UNSAFE_CHARS = set('*!#%&=+{}<>[]|\\~^`"')
+
+
 SPECIAL_CHARS_MAP = {
     'e': ['\u00e9', '\u00e8', '\u00ea', '\u00eb'],
     'a': ['\u00e0', '\u00e2', '\u00e4'],
@@ -141,7 +144,9 @@ def _email_score(rows, col_idx):
 def _find_special_chars(text):
     issues = []
     for char in text:
-        if ord(char) > 127:
+        if char in UNSAFE_CHARS:
+            issues.append({'char': char, 'code': f'U+{ord(char):04X}', 'replace': ''})
+        elif ord(char) > 127:
             for base, variants in SPECIAL_CHARS_MAP.items():
                 if char in variants:
                     issues.append({'char': char, 'code': f'U+{ord(char):04X}', 'replace': base})
@@ -153,6 +158,7 @@ def _find_special_chars(text):
 
 def detect_issues(data, email_col, name_col=None, company_col=None, phone_col=None):
     seen_emails = {}
+    seen_names = {}
     issues_by_row = []
     stats = {'doublons': 0, 'chars_speciaux': 0, 'emails_invalides': 0, 'lignes_total': len(data)}
 
@@ -171,6 +177,17 @@ def detect_issues(data, email_col, name_col=None, company_col=None, phone_col=No
                     stats['doublons'] += 1
                 else:
                     seen_emails[email] = row_idx
+
+        if name_col is not None and name_col < len(row):
+            full_name = row[name_col].strip().lower()
+            if full_name and len(full_name) >= 3:
+                if full_name in seen_names and not row_issues['is_duplicate']:
+                    row_issues['is_duplicate'] = True
+                    if not row_issues['email_issue']:
+                        row_issues['email_issue'] = 'doublon'
+                    stats['doublons'] += 1
+                else:
+                    seen_names[full_name] = row_idx
 
         for col_idx in [name_col, company_col, phone_col]:
             if col_idx is not None and col_idx < len(row):
